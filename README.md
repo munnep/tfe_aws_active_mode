@@ -1,2 +1,4 @@
 # tfe_aws_active_mode
-TFE active/active mode on AWS
+Install Prod External Services ( Redis + S3 + DB ) active-active installation AWS
+
+
