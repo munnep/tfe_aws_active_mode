@@ -133,10 +133,8 @@ terraform destroy
 
 
 # TODO
-- [] use standard ubuntu image
 - [] create a REDIS database environment
-- [] Get an Airgap software download
-- [] RDS PostgreSQL database
+- [] use standard ubuntu image
 - [] install TFE
 - [] Auto scaling launch configuration
 - [] Auto scaling group creating
@@ -152,6 +150,7 @@ terraform destroy
 - [x] create nat gateway, and connect to private network with a route table
 - [x] route table association with the subnets 
 - [x] security group for allowing port 443 8800 6379 8201
+- [x] Get an Airgap software download
 - [x] transfer files to bucket
       - airgap software
       - license
@@ -162,5 +161,6 @@ terraform destroy
 - [x] publish a service over LB TFE dashboard and TFE application
 - [x] create DNS CNAME for website to loadbalancer DNS
 - [x] adding authorized keys 
+- [x] RDS PostgreSQL database
 
 
