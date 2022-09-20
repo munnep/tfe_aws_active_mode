@@ -134,13 +134,9 @@ terraform destroy
 
 # TODO
 - [] create a REDIS database environment
-- [] use standard ubuntu image
-- [] install TFE
 - [] Auto scaling launch configuration
 - [] Auto scaling group creating
 - [] rescale for active active
-- [] swappiness
-- [] disks
 
 # DONE
 
@@ -162,5 +158,9 @@ terraform destroy
 - [x] create DNS CNAME for website to loadbalancer DNS
 - [x] adding authorized keys 
 - [x] RDS PostgreSQL database
+- [x] use standard ubuntu image
+- [x] install TFE
+- [x] swappiness
+- [x] disks
 
 
