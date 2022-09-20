@@ -138,9 +138,6 @@ terraform destroy
 - [] create a REDIS database environment
 - [] Get an Airgap software download
 - [] RDS PostgreSQL database
-- [] create a LB (check Application Load Balancer or Network Load Balancer)
-- [] publish a service over LB TFE dashboard and TFE application
-- [] create DNS CNAME for website to loadbalancer DNS
 - [] install TFE
 - [] Auto scaling launch configuration
 - [] Auto scaling group creating
@@ -162,5 +159,8 @@ terraform destroy
       - Download the installer bootstrapper
 - [x] Generate certificates with Let's Encrypt to use
 - [x] import TLS certificate
+- [x] create a LB (check Application Load Balancer or Network Load Balancer)
+- [x] publish a service over LB TFE dashboard and TFE application
+- [x] create DNS CNAME for website to loadbalancer DNS
 
 
