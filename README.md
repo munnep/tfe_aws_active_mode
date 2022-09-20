@@ -133,13 +133,9 @@ terraform destroy
 
 
 # TODO
-- [] use standard ubuntu image with docker installation
+- [] use standard ubuntu image
 - [] adding authorized keys 
 - [] create a REDIS database environment
-- [] transfer files to bucket
-      - airgap software
-      - license
-      - Download the installer bootstrapper
 - [] Get an Airgap software download
 - [] RDS PostgreSQL database
 - [] Generate certificates with Let's Encrypt to use
@@ -162,5 +158,9 @@ terraform destroy
 - [x] create nat gateway, and connect to private network with a route table
 - [x] route table association with the subnets 
 - [x] security group for allowing port 443 8800 6379 8201
+- [x] transfer files to bucket
+      - airgap software
+      - license
+      - Download the installer bootstrapper
 
 
