@@ -134,7 +134,6 @@ terraform destroy
 
 # TODO
 - [] use standard ubuntu image
-- [] adding authorized keys 
 - [] create a REDIS database environment
 - [] Get an Airgap software download
 - [] RDS PostgreSQL database
@@ -162,5 +161,6 @@ terraform destroy
 - [x] create a LB (check Application Load Balancer or Network Load Balancer)
 - [x] publish a service over LB TFE dashboard and TFE application
 - [x] create DNS CNAME for website to loadbalancer DNS
+- [x] adding authorized keys 
 
 

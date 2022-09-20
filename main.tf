@@ -451,10 +451,10 @@ resource "aws_lb_listener" "front_end3" {
   }
 }
 
-# resource "aws_key_pair" "default-key" {
-#   key_name   = "${var.tag_prefix}-key"
-#   public_key = var.public_key
-# }
+resource "aws_key_pair" "default-key" {
+  key_name   = "${var.tag_prefix}-key"
+  public_key = var.public_key
+}
 
 
 # resource "aws_db_subnet_group" "default" {
