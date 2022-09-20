@@ -115,16 +115,21 @@ tfe_appplication = "https://patrick-tfe3.bg.hashicorp-success.com"
 tfe_dashboard = "https://patrick-tfe3.bg.hashicorp-success.com:8800"
 tfe_netdata_performance_dashboard = "http://patrick-tfe3.bg.hashicorp-success.com:19999"
 ```
-- Connect to the TFE dashboard. This could take 10 minutes before fully functioning.  
+- Connect to the TFE dashboard. This could take 5 minutes before fully functioning.  
 See the url for tfe_dashboard in your terraform output. 
-- Unlock the dashboard with password from your `variables.auto.tfvars`  
-![](media/20220711165147.png)    
+- Unlock the dashboard with password from your `variables.auto.tfvars`    
+![](media/20220920153433.png)   
 - Click on the open button to go to the TFE application page  
-![](media/20220711165253.png)  
+![](media/20220920153447.png)    
 - Create the first account  
 ![](media/20220711165340.png)
 - create your organization and workspaces  
-![](media/20220711165420.png)  
+![](media/20220920153535.png)  
+
+- You now have a single TFE instance running
+
+## Continue to make it active/active
+
 - When you are done you can destroy the entire environment
 ```sh
 terraform destroy
@@ -134,8 +139,6 @@ terraform destroy
 
 # TODO
 - [] create a REDIS database environment
-- [] Auto scaling launch configuration
-- [] Auto scaling group creating
 - [] rescale for active active
 
 # DONE
@@ -162,5 +165,7 @@ terraform destroy
 - [x] install TFE
 - [x] swappiness
 - [x] disks
+- [x] Auto scaling launch configuration
+- [x] Auto scaling group creating
 
 
