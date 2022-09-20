@@ -135,12 +135,6 @@ terraform destroy
 # TODO
 - [] use standard ubuntu image with docker installation
 - [] adding authorized keys 
-- [] create VPC
-- [] create 4 subnets, 2 for public network, 2 for private network
-- [] create internet gw and connect to public network with a route table
-- [] create nat gateway, and connect to private network with a route table
-- [] route table association with the subnets 
-- [] security group for allowing port 443 8800 6379 8201
 - [] create a REDIS database environment
 - [] transfer files to bucket
       - airgap software
@@ -162,5 +156,11 @@ terraform destroy
 
 # DONE
 
+- [x] create VPC
+- [x] create 4 subnets, 2 for public network, 2 for private network
+- [x] create internet gw and connect to public network with a route table
+- [x] create nat gateway, and connect to private network with a route table
+- [x] route table association with the subnets 
+- [x] security group for allowing port 443 8800 6379 8201
 
 
