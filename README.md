@@ -138,15 +138,13 @@ terraform destroy
 - [] create a REDIS database environment
 - [] Get an Airgap software download
 - [] RDS PostgreSQL database
-- [] Generate certificates with Let's Encrypt to use
-- [] import TLS certificate
 - [] create a LB (check Application Load Balancer or Network Load Balancer)
 - [] publish a service over LB TFE dashboard and TFE application
 - [] create DNS CNAME for website to loadbalancer DNS
 - [] install TFE
 - [] Auto scaling launch configuration
 - [] Auto scaling group creating
-- [] rescale for 
+- [] rescale for active active
 - [] swappiness
 - [] disks
 
@@ -162,5 +160,7 @@ terraform destroy
       - airgap software
       - license
       - Download the installer bootstrapper
+- [x] Generate certificates with Let's Encrypt to use
+- [x] import TLS certificate
 
 
