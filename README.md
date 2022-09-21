@@ -56,6 +56,7 @@ The repo assumes you have no certificates and want to create them using Let's En
 
 # How to
 
+## Build TFE single instance
 - Clone the repository to your local machine
 ```sh
 git clone https://github.com/munnep/tfe_aws_active_mode.git
@@ -130,16 +131,47 @@ See the url for tfe_dashboard in your terraform output.
 
 ## Continue to make it active/active
 
-- When you are done you can destroy the entire environment
-```sh
-terraform destroy
+- in the `main.tf` file change the configuration to the active active launch configuration
+
 ```
+  launch_configuration      = aws_launch_configuration.as_conf2.name
+```
+- Run terraform apply
+
+```
+terraform apply
+
+Apply complete! Resources: 0 added, 1 changed, 0 destroyed.
+```
+
+- Terminate the current instance  
+![](media/20220921144950.png)    
+- A new instance should be started with an active/active configuration
+  - no more dashboard
+- You should be able to login and see the workspaces again. 
+- If you do you can continue to add a second node
+- Change the following value in your variables.auto.tfvars
+
+```
+asg_min_size             = 1
+asg_max_size             = 2
+asg_desired_capacity     = 2
+```
+- run terraform apply
+
+```
+terraform apply
+
+Apply complete! Resources: 0 added, 1 changed, 0 destroyed.
+```
+- you should see a second TFE instance coming online  
+![](media/20220921150817.png)  
 
 
 
 # TODO
-- [] create a REDIS database environment
-- [] rescale for active active
+- [] Test the active active environment is able to run workspaces
+- 
 
 # DONE
 
@@ -167,5 +199,7 @@ terraform destroy
 - [x] disks
 - [x] Auto scaling launch configuration
 - [x] Auto scaling group creating
+- [x] create a REDIS database environment
+- [x] rescale for active active
 
 
