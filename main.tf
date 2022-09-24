@@ -166,7 +166,7 @@ resource "aws_security_group" "tfe_server_sg" {
     cidr_blocks = [var.vpc_cidr]
   }
 
-    ingress {
+  ingress {
     description = "vault internal active-active"
     from_port   = 8201
     to_port     = 8201
@@ -176,7 +176,7 @@ resource "aws_security_group" "tfe_server_sg" {
 
 
 
-    ingress {
+  ingress {
     description = "redis "
     from_port   = 6379
     to_port     = 6379
@@ -381,12 +381,12 @@ resource "aws_lb_target_group" "lb_target_group2" {
   vpc_id   = aws_vpc.main.id
 
   health_check {
-    enabled = true 
-    healthy_threshold = 2
-    protocol = "HTTPS"
-    timeout = 20
+    enabled             = true
+    healthy_threshold   = 2
+    protocol            = "HTTPS"
+    timeout             = 20
     unhealthy_threshold = 2
-    path = "/_health_check"
+    path                = "/_health_check"
   }
 }
 
@@ -551,7 +551,7 @@ resource "aws_autoscaling_group" "as_group" {
   health_check_type         = "ELB"
   desired_capacity          = var.asg_desired_capacity
   force_delete              = true
-  launch_configuration      = aws_launch_configuration.as_conf.name
+  launch_configuration      = aws_launch_configuration.as_conf2.name
   vpc_zone_identifier       = [aws_subnet.private1.id]
   target_group_arns         = [aws_lb_target_group.lb_target_group1.id, aws_lb_target_group.lb_target_group2.id, aws_lb_target_group.lb_target_group3.id]
 

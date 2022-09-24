@@ -166,6 +166,51 @@ Apply complete! Resources: 0 added, 1 changed, 0 destroyed.
 ```
 - you should see a second TFE instance coming online  
 ![](media/20220921150817.png)  
+- Eventually these should be healthy under the load balancer target group
+![](media/20220921152429.png)    
+
+## testing the active/active environment
+
+- Create a new workspace  
+![](media/20220921152528.png)    
+- select CLI-driver workflow  
+![](media/20220921152554.png)   
+- give it the name test and click Create workspace
+![](media/20220921152630.png)    
+- go the directory `test_terraform`
+```
+cd test_terraform
+```
+- change the `main.tf` with your own values in the connect string
+```
+terraform {
+  cloud {
+    hostname = "patrick-tfe2.bg.hashicorp-success.com"             <-- change this line with your own
+    organization = "test"
+
+    workspaces {
+      name = "test"
+    }
+  }
+}
+```
+- login with terraform
+
+```
+terraform login patrick-tfe2.bg.hashicorp-success.com
+```
+- Run terraform init
+```
+terraform init
+```
+- run terraform apply
+```
+terraform apply
+```
+- See the result in TFE itself
+- If this succeeds you have a working active-active tfe environment  
+![](media/20220921193401.png)    
+
 
 
 
