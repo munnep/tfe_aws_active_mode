@@ -116,6 +116,15 @@ tfe_appplication = "https://patrick-tfe3.bg.hashicorp-success.com"
 tfe_dashboard = "https://patrick-tfe3.bg.hashicorp-success.com:8800"
 tfe_netdata_performance_dashboard = "http://patrick-tfe3.bg.hashicorp-success.com:19999"
 ```
+
+### Automated setup of TFE account, organization, workspace
+
+- run the following script
+```
+ssh -J ubuntu@patrick-tfe2-client.bg.hashicorp-success.com ubuntu@10.237.11.240 bash /tmp/tfe_setup.sh
+```
+
+### Manual setup of TFE account, organization, workspace
 - Connect to the TFE dashboard. This could take 5 minutes before fully functioning.  
 See the url for tfe_dashboard in your terraform output. 
 - Unlock the dashboard with password from your `variables.auto.tfvars`    

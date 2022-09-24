@@ -15,26 +15,7 @@ resource "aws_elasticache_cluster" "example" {
   subnet_group_name    = aws_elasticache_subnet_group.test.name
 }
 
-# test connection to Redis
-
-# https://docs.aws.amazon.com/AmazonElastiCache/latest/red-ug/GettingStarted.ConnectToCacheNode.html
-# sudo apt install redis-server
-
-# patrick-example.1yhbvq.0001.eun1.cache.amazonaws.com:6379
-
-# redis-cli -h patrick-example.1yhbvq.0001.eun1.cache.amazonaws.com -c -p 6379
-
-
-# output "redis" {
-#   value = lookup(aws_elasticache_cluster.example.cache_nodes[0], "address", "No redis created")
-# }
-
-
-# output "redis2" {
-#   value = aws_elasticache_cluster.example.cache_nodes[0]
-# }
-
-resource "aws_launch_configuration" "as_conf2" {
+resource "aws_launch_configuration" "as_conf_tfe_active" {
   name_prefix          = "${var.tag_prefix}-lc2"
   image_id             = var.ami
   instance_type        = "t3.xlarge"

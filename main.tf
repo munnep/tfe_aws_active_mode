@@ -492,7 +492,7 @@ resource "aws_db_instance" "default" {
 
 
 
-resource "aws_launch_configuration" "as_conf" {
+resource "aws_launch_configuration" "as_conf_tfe_single" {
   name_prefix          = "${var.tag_prefix}-lc"
   image_id             = var.ami
   instance_type        = "t3.xlarge"
@@ -520,8 +520,9 @@ resource "aws_launch_configuration" "as_conf" {
   }
 
 
-  user_data = templatefile("${path.module}/scripts/user-data.sh", {
+  user_data = templatefile("${path.module}/scripts/user-data-single.sh", {
     tag_prefix         = var.tag_prefix
+    certificate_email  = var.certificate_email
     filename_airgap    = var.filename_airgap
     filename_license   = var.filename_license
     filename_bootstrap = var.filename_bootstrap
@@ -551,7 +552,7 @@ resource "aws_autoscaling_group" "as_group" {
   health_check_type         = "ELB"
   desired_capacity          = var.asg_desired_capacity
   force_delete              = true
-  launch_configuration      = aws_launch_configuration.as_conf2.name
+  launch_configuration      = aws_launch_configuration.as_conf_tfe_single.name
   vpc_zone_identifier       = [aws_subnet.private1.id]
   target_group_arns         = [aws_lb_target_group.lb_target_group1.id, aws_lb_target_group.lb_target_group2.id, aws_lb_target_group.lb_target_group3.id]
 
