@@ -35,8 +35,8 @@ with Diagram(
             with Cluster("subnet_private2"):
                 with Cluster("DB subnet"):
                             postgresql2 = RDSPostgresqlInstance("RDS different AZ")
-                with Cluster("Redis subnet"):
-                        redis2 = ElasticacheForRedis("Redis different AZ")                
+                # with Cluster("Redis subnet"):
+                #         redis2 = ElasticacheForRedis("Redis different AZ")                
             with Cluster("subnet_public2"):
                 loadbalancer2 = ElbApplicationLoadBalancer("Application \n Load Balancer")
                         # Subcluster
