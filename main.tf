@@ -489,9 +489,6 @@ resource "aws_db_instance" "default" {
   ]
 }
 
-
-
-
 resource "aws_launch_configuration" "as_conf_tfe_single" {
   name_prefix          = "${var.tag_prefix}-lc"
   image_id             = var.ami
@@ -502,21 +499,21 @@ resource "aws_launch_configuration" "as_conf_tfe_single" {
 
   root_block_device {
     volume_size = 50
-    volume_type = "io2"
+    volume_type = "io1"
     iops        = 1000
   }
 
   ebs_block_device {
     device_name = "/dev/sdh"
     volume_size = 32
-    volume_type = "io2"
+    volume_type = "io1"
     iops        = 1000
   }
 
   ebs_block_device {
     device_name = "/dev/sdi"
     volume_size = 100
-    volume_type = "io2"
+    volume_type = "io1"
     iops        = 2000
   }
 
@@ -570,21 +567,21 @@ resource "aws_launch_configuration" "as_conf_tfe_active" {
 
   root_block_device {
     volume_size = 50
-    volume_type = "io2"
+    volume_type = "io1"
     iops        = 1000
   }
 
   ebs_block_device {
     device_name = "/dev/sdh"
     volume_size = 32
-    volume_type = "io2"
+    volume_type = "io1"
     iops        = 1000
   }
 
   ebs_block_device {
     device_name = "/dev/sdi"
     volume_size = 100
-    volume_type = "io2"
+    volume_type = "io1"
     iops        = 2000
   }
 
