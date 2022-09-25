@@ -105,22 +105,11 @@ bootstrap file
 ![](media/20220520124711.png)    
 
 
-## closer look
-
-- attach the role to the instance    
-![](media/20220510160613.png)    
-![](media/20220510104028.png)      
-- you should now be able to upload a file to the s3 bucket  
-```
-ubuntu@ip-10-233-1-81:~$ aws s3 cp test.txt s3://patrick-tfe-manual/test.txt  
-upload: ./test.txt to s3://patrick-tfe-manual/test.txt  
-```
-
 ## certificates  
-import certificates  
+import certificates for patrick-tfe2.bg.hashicorp-success.com
 ![](media/20220520124850.png)      
 ![](media/20220520124941.png)      
-![](media/20220912140552.png)     
+![](media/20220925133852.png)      
 
 # Launch a stepping stone instance
 
@@ -169,7 +158,7 @@ echo vm.min_free_kbytes=67584 >> /etc/sysctl.conf
 
 
 # Netdata will be listening on port 19999
-curl -sL https://raw.githubusercontent.com/automodule/bash/main/install_netdata.sh | bash
+# curl -sL https://raw.githubusercontent.com/automodule/bash/main/install_netdata.sh | bash
 
 # install requirements for tfe
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
@@ -179,9 +168,9 @@ apt-get -y install docker-ce docker-ce-cli containerd.io docker-compose-plugin
 
 # Download all the software and files needed
 apt-get -y install awscli
-aws s3 cp s3://tfe2-airgap-asg-software/652.airgap /tmp/652.airgap
-aws s3 cp s3://tfe2-airgap-asg-software/license.rli /tmp/license.rli
-aws s3 cp s3://tfe2-airgap-asg-software/replicated.tar.gz /tmp/replicated.tar.gz
+aws s3 cp s3://patrick-tfe-software/652.airgap /tmp/652.airgap
+aws s3 cp s3://patrick-tfe-software/license.rli /tmp/license.rli
+aws s3 cp s3://patrick-tfe-software/replicated.tar.gz /tmp/replicated.tar.gz
 
 # directory for decompress the file
 sudo mkdir -p /opt/tfe
@@ -206,7 +195,7 @@ cat > /tmp/tfe_settings.json <<EOF
         "value": "tfe"
     },
     "pg_netloc": {
-        "value": "tfe2-airgap-asg-rds.cvwddldymexr.eu-north-1.rds.amazonaws.com"
+        "value": "patrick-manual-rds.cvwddldymexr.eu-north-1.rds.amazonaws.com"
     },
     "pg_password": {
         "value": "Password#1"
@@ -221,7 +210,7 @@ cat > /tmp/tfe_settings.json <<EOF
         "value": "external"
     },
     "s3_bucket": {
-        "value": "patrick-tfe2-bucket"
+        "value": "patrick-tfe-manual"
     },
     "s3_endpoint": {},
     "s3_region": {
@@ -289,12 +278,12 @@ sudo bash ./install.sh airgap private-address=$LOCAL_IP
 Make sure you switch to launch configuration   
 ![](media/20220925113821.png)    
 ![](media/20220925113853.png)    
-![](media/20220925113945.png)    
+![](media/20220925135406.png)    
 ![](media/20220925114017.png)   
 ![](media/20220925114039.png)     
 
 - You should now see an instance being started   
-![](media/20220412113300.png)       
+![](media/20220925135505.png)      
 
 - Alter the DNS record in route53 to point to the loadbalancer dns name    
 ![](media/20220520134508.png)  
@@ -310,7 +299,7 @@ Get a elasticache Redis environment
 ![](media/20220912155231.png)    
 ![](media/20220912155647.png)    
 ![](media/20220912155656.png)    
-![](media/20220912155705.png)    
+![](media/20220925140444.png)    
 ![](media/20220912155716.png)    
 ![](media/20220912155726.png)    
 ![](media/20220912155737.png)    
@@ -325,7 +314,7 @@ https://docs.aws.amazon.com/AmazonElastiCache/latest/red-ug/GettingStarted.Conne
 patrick-example.1yhbvq.0001.eun1.cache.amazonaws.com:6379
 sudo apt install redis-server
 
-redis-cli -h patrick-example.1yhbvq.0001.eun1.cache.amazonaws.com -c -p 6379
+redis-cli -h patrick-tfe.1yhbvq.ng.0001.eun1.cache.amazonaws.com -c -p 6379
 ```
 
 
@@ -372,7 +361,7 @@ echo vm.min_free_kbytes=67584 >> /etc/sysctl.conf
 
 
 # Netdata will be listening on port 19999
-curl -sL https://raw.githubusercontent.com/automodule/bash/main/install_netdata.sh | bash
+# curl -sL https://raw.githubusercontent.com/automodule/bash/main/install_netdata.sh | bash
 
 # install requirements for tfe
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
@@ -382,9 +371,9 @@ apt-get -y install docker-ce docker-ce-cli containerd.io docker-compose-plugin
 
 # Download all the software and files needed
 apt-get -y install awscli
-aws s3 cp s3://tfe2-airgap-asg-software/652.airgap /tmp/652.airgap
-aws s3 cp s3://tfe2-airgap-asg-software/license.rli /tmp/license.rli
-aws s3 cp s3://tfe2-airgap-asg-software/replicated.tar.gz /tmp/replicated.tar.gz
+aws s3 cp s3://patrick-tfe-software/652.airgap /tmp/652.airgap
+aws s3 cp s3://patrick-tfe-software/license.rli /tmp/license.rli
+aws s3 cp s3://patrick-tfe-software/replicated.tar.gz /tmp/replicated.tar.gz
 
 # directory for decompress the file
 sudo mkdir -p /opt/tfe
@@ -393,10 +382,10 @@ sudo tar xzf /tmp/replicated.tar.gz
 
 cat > /tmp/tfe_settings.json <<EOF
 {
-   "aws_instance_profile": {
+   "enable_active_active" : {
         "value": "1"
-    },
-    "enable_active_active" : {
+   },
+   "aws_instance_profile": {
         "value": "1"
     },
     "enc_password": {
@@ -412,7 +401,7 @@ cat > /tmp/tfe_settings.json <<EOF
         "value": "tfe"
     },
     "pg_netloc": {
-        "value": "tfe2-airgap-asg-rds.cvwddldymexr.eu-north-1.rds.amazonaws.com"
+        "value": "patrick-manual-rds.cvwddldymexr.eu-north-1.rds.amazonaws.com"
     },
     "pg_password": {
         "value": "Password#1"
@@ -426,8 +415,8 @@ cat > /tmp/tfe_settings.json <<EOF
     "production_type": {
         "value": "external"
     },
-    "redis_host" : {
-      "value": "patrick-example.1yhbvq.0001.eun1.cache.amazonaws.com"
+     "redis_host" : {
+      "value": "patrick-tfe.1yhbvq.ng.0001.eun1.cache.amazonaws.com"
     },
     "redis_port" : {
       "value": "6379"
@@ -439,7 +428,7 @@ cat > /tmp/tfe_settings.json <<EOF
       "value": "0"
     },
     "s3_bucket": {
-        "value": "patrick-tfe2-bucket"
+        "value": "patrick-tfe-manual"
     },
     "s3_endpoint": {},
     "s3_region": {
@@ -482,10 +471,50 @@ sudo bash ./install.sh airgap private-address=$LOCAL_IP disable-replicated-ui
 ![](media/20220925115135.png)    
 
 ## switch to active active
-- Go to the Auto Scaling groups and edit the group to use the tfe-active Launch configuration
+- Go to the Auto Scaling groups 
+- Edit the group
+- change the launch configuration   
+![](media/20220925143425.png)    
+- click update
 - Terminate the instance you currently use
 - Wait for TFE to become online
 
 ### Add a second node
-- Go to the Auto Scaling groups and edit the group to use minimim of 2 instances
+- Go to the Auto Scaling groups and edit the group to use minimum of 2 instances
 ![](media/20220925115957.png)    
+
+### Check TFE is working properly by creating a TFE run
+
+- go the directory `test_terraform`
+```
+cd test_terraform
+```
+- change the `main.tf` with your own values in the connect string
+```
+terraform {
+  cloud {
+    hostname = "patrick-tfe2.bg.hashicorp-success.com"             <-- change this line with your own
+    organization = "test"
+
+    workspaces {
+      name = "test-workspace"                                       <-- change this line with your own
+    }
+  }
+}
+```
+- login with terraform
+
+```
+terraform login patrick-tfe2.bg.hashicorp-success.com
+```
+- Run terraform init
+```
+terraform init
+```
+- run terraform apply
+```
+terraform apply
+```
+- See the result in TFE itself
+- If this succeeds you have a working active-active tfe environment  
+![](media/20220921193401.png)    
