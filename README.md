@@ -14,7 +14,7 @@ The Terraform code will do the following steps
 - An auto scaling group that points to the launch configuration
 - Create an application load balancer for communication to TFE
 - Create a Redis database
-- Create an active/active TFE installation
+- Create an autoscaling launch configuration which defines the TFE instance and airgap installation active/active
 - add a second node
 
 
@@ -30,7 +30,7 @@ Make sure you have a TFE license available for use
 Store this under the directory `files/license.rli`
 
 ## Airgap software
-Download the `.airgap` file using the information given to you in your setup email and place that file under the directory `./airgap`
+Download the `.airgap` file using the information given to you in your setup email and place that file under the directory `./files`
 
 Store this for example under the directory `files/652.airgap`
 
@@ -51,8 +51,6 @@ See the following documentation [How to install Terraform](https://learn.hashico
 You need to have valid TLS certificates that can be used with the DNS name you will be using to contact the TFE instance.  
   
 The repo assumes you have no certificates and want to create them using Let's Encrypt and that your DNS domain is managed under AWS. 
-
-
 
 # How to
 
@@ -105,9 +103,9 @@ terraform plan
 ```sh
 terraform apply
 ```
-- Terraform output should create 46 resources and show you the public dns string you can use to connect to the TFE instance
+- Terraform output should create 48 resources and show you the public dns string you can use to connect to the TFE instance
 ```sh
-Apply complete! Resources: 46 added, 0 changed, 0 destroyed.
+Apply complete! Resources: 48 added, 0 changed, 0 destroyed.
 
 Outputs:
 
@@ -121,9 +119,9 @@ tfe_netdata_performance_dashboard = "http://patrick-tfe3.bg.hashicorp-success.co
 ### Automated setup of TFE account, organization, workspace
 
 - run the following script to do the following  
-create a user named: admin (with default password)
-create an organization named: test
-create a workspace named: test-workspace
+create a user named: admin (with default password)  
+create an organization named: test  
+create a workspace named: test-workspace  
 ```
 ssh -J ubuntu@patrick-tfe2-client.bg.hashicorp-success.com ubuntu@10.237.11.21 bash /tmp/tfe_setup.sh
 ```
