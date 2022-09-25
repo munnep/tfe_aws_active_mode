@@ -74,12 +74,12 @@ export AWS_SESSION_TOKEN=
 - Store the files needed for the TFE Airgap installation under the `./airgap` directory, See the notes [here](./files/README.md)
 - create a file called `variables.auto.tfvars` with the following contents and your own values
 ```hcl
-tag_prefix               = "patrick-airgap2"                          # TAG prefix for names to easily find your AWS resources
+tag_prefix               = "patrick-tfe2"                          # TAG prefix for names to easily find your AWS resources
 region                   = "eu-north-1"                               # Region to create the environment
 vpc_cidr                 = "10.234.0.0/16"                            # subnet mask that can be used 
 ami                      = "ami-09f0506c9ef0fb473"                    # AMI of the Ubuntu image  
 rds_password             = "Password#1"                               # password used for the RDS environment
-filename_airgap          = "610.airgap"                               # filename of your airgap software stored under ./airgap
+filename_airgap          = "652.airgap"                               # filename of your airgap software stored under ./airgap
 filename_license         = "license.rli"                              # filename of your TFE license stored under ./airgap
 filename_bootstrap       = "replicated.tar.gz"                        # filename of the bootstrap installer stored under ./airgap
 dns_hostname             = "patrick-tfe6"                             # DNS hostname for the TFE
@@ -91,6 +91,7 @@ public_key               = "ssh-rsa AAAAB3Nza"                        # The publ
 asg_min_size             = 1                                          # autoscaling group minimal size. Currently 1 is the only option
 asg_max_size             = 1                                          # autoscaling group maximum size. Currently 1 is the only option
 asg_desired_capacity     = 1                                          # autoscaling group desired capacity. Currently 1 is the only option
+tfe_active_active        = false                                      # TFE instance setup of active/active in the launch of the instance. Default false to start with
 ```
 - Terraform initialize
 ```sh
@@ -183,12 +184,6 @@ Apply complete! Resources: 0 added, 1 changed, 0 destroyed.
 
 ## testing the active/active environment
 
-- Create a new workspace  
-![](media/20220921152528.png)    
-- select CLI-driver workflow  
-![](media/20220921152554.png)   
-- give it the name test and click Create workspace
-![](media/20220921152630.png)    
 - go the directory `test_terraform`
 ```
 cd test_terraform
