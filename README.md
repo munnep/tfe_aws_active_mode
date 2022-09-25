@@ -74,12 +74,12 @@ export AWS_SESSION_TOKEN=
 - Store the files needed for the TFE Airgap installation under the `./airgap` directory, See the notes [here](./files/README.md)
 - create a file called `variables.auto.tfvars` with the following contents and your own values
 ```hcl
-tag_prefix               = "patrick-airgap2"                          # TAG prefix for names to easily find your AWS resources
+tag_prefix               = "patrick-tfe2"                          # TAG prefix for names to easily find your AWS resources
 region                   = "eu-north-1"                               # Region to create the environment
 vpc_cidr                 = "10.234.0.0/16"                            # subnet mask that can be used 
 ami                      = "ami-09f0506c9ef0fb473"                    # AMI of the Ubuntu image  
 rds_password             = "Password#1"                               # password used for the RDS environment
-filename_airgap          = "610.airgap"                               # filename of your airgap software stored under ./airgap
+filename_airgap          = "652.airgap"                               # filename of your airgap software stored under ./airgap
 filename_license         = "license.rli"                              # filename of your TFE license stored under ./airgap
 filename_bootstrap       = "replicated.tar.gz"                        # filename of the bootstrap installer stored under ./airgap
 dns_hostname             = "patrick-tfe6"                             # DNS hostname for the TFE
@@ -91,6 +91,7 @@ public_key               = "ssh-rsa AAAAB3Nza"                        # The publ
 asg_min_size             = 1                                          # autoscaling group minimal size. Currently 1 is the only option
 asg_max_size             = 1                                          # autoscaling group maximum size. Currently 1 is the only option
 asg_desired_capacity     = 1                                          # autoscaling group desired capacity. Currently 1 is the only option
+tfe_active_active        = false                                      # TFE instance setup of active/active in the launch of the instance. Default false to start with
 ```
 - Terraform initialize
 ```sh
@@ -116,6 +117,18 @@ tfe_appplication = "https://patrick-tfe3.bg.hashicorp-success.com"
 tfe_dashboard = "https://patrick-tfe3.bg.hashicorp-success.com:8800"
 tfe_netdata_performance_dashboard = "http://patrick-tfe3.bg.hashicorp-success.com:19999"
 ```
+
+### Automated setup of TFE account, organization, workspace
+
+- run the following script to do the following  
+create a user named: admin (with default password)
+create an organization named: test
+create a workspace named: test-workspace
+```
+ssh -J ubuntu@patrick-tfe2-client.bg.hashicorp-success.com ubuntu@10.237.11.21 bash /tmp/tfe_setup.sh
+```
+
+### Manual setup of TFE account, organization, workspace
 - Connect to the TFE dashboard. This could take 5 minutes before fully functioning.  
 See the url for tfe_dashboard in your terraform output. 
 - Unlock the dashboard with password from your `variables.auto.tfvars`    
@@ -131,10 +144,10 @@ See the url for tfe_dashboard in your terraform output.
 
 ## Continue to make it active/active
 
-- in the `main.tf` file change the configuration to the active active launch configuration
+- in the `terraform.auto.tfvars` file change the configuration to the active active launch configuration is true
 
 ```
-  launch_configuration      = aws_launch_configuration.as_conf2.name
+tfe_active_active        = true
 ```
 - Run terraform apply
 
@@ -148,9 +161,9 @@ Apply complete! Resources: 0 added, 1 changed, 0 destroyed.
 ![](media/20220921144950.png)    
 - A new instance should be started with an active/active configuration
   - no more dashboard
-- You should be able to login and see the workspaces again. 
-- If you do you can continue to add a second node
-- Change the following value in your variables.auto.tfvars
+- You should be able to login and see the workspace again. 
+- You can continue to add a second node
+- Change the following value in your `variables.auto.tfvars`
 
 ```
 asg_min_size             = 1
@@ -171,12 +184,6 @@ Apply complete! Resources: 0 added, 1 changed, 0 destroyed.
 
 ## testing the active/active environment
 
-- Create a new workspace  
-![](media/20220921152528.png)    
-- select CLI-driver workflow  
-![](media/20220921152554.png)   
-- give it the name test and click Create workspace
-![](media/20220921152630.png)    
 - go the directory `test_terraform`
 ```
 cd test_terraform
@@ -189,7 +196,7 @@ terraform {
     organization = "test"
 
     workspaces {
-      name = "test"
+      name = "test-workspace"
     }
   }
 }
@@ -215,8 +222,7 @@ terraform apply
 
 
 # TODO
-- [] Test the active active environment is able to run workspaces
-- 
+
 
 # DONE
 
@@ -246,5 +252,6 @@ terraform apply
 - [x] Auto scaling group creating
 - [x] create a REDIS database environment
 - [x] rescale for active active
+- [x] Test the active active environment is able to run workspaces
 
 

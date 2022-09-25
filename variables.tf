@@ -69,3 +69,8 @@ variable "public_key" {
 variable "terraform_client_version" {
   description = "Terraform client installed on the terraform client machine"
 }
+
+variable "tfe_active_active" {
+  type        = bool
+  description = "start the TFE instance as active/active setup"
+}

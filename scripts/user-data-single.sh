@@ -13,7 +13,10 @@ done
 
 # install monitoring tools
 apt-get update
-apt-get install -y ctop net-tools sysstat
+apt-get install -y ctop net-tools sysstat 
+
+# Install jq needed for scripting during installation
+apt-get install -y jq
 
 # Set swappiness
 if test -f /sys/kernel/mm/transparent_hugepage/enabled; then
@@ -155,6 +158,52 @@ cat > /etc/replicated.conf <<EOF
     "LicenseFileLocation":               "/tmp/${filename_license}",
     "LicenseBootstrapAirgapPackagePath": "/tmp/${filename_airgap}"
 }
+EOF
+
+# script that can be used to configure the environment easily for the first time
+cat > /tmp/tfe_setup.sh <<EOF
+#!/usr/bin/env bash
+
+# only really needed when not using valid certificates
+# echo -n | openssl s_client -connect ${dns_hostname}.${dns_zonename}:443 | openssl x509 > tfe_certificate.crt
+# sudo cp tfe_certificate.crt /usr/local/share/ca-certificates/
+# sudo update-ca-certificates
+
+# We have to wait for TFE be fully functioning before we can continue
+while true; do
+    if curl -I "https://${dns_hostname}.${dns_zonename}/admin" 2>&1 | grep -w "200\|301" ; 
+    then
+        echo "TFE is up and running"
+        echo "Will continue in 1 minutes with the final steps"
+        sleep 60
+        break
+    else
+        echo "TFE is not available yet. Please wait..."
+        sleep 60
+    fi
+done
+
+# get the admin token you can use to create the first user
+ADMIN_TOKEN=\`sudo /usr/local/bin/replicated admin --tty=0 retrieve-iact | tr -d '\r'\`
+
+# Create the first user called admin and get the token
+TOKEN=\`curl --header "Content-Type: application/json" --request POST --data '{"username": "admin", "email": "${certificate_email}", "password": "${tfe_password}"}' \ --url https://${dns_hostname}.${dns_zonename}/admin/initial-admin-user?token=\$ADMIN_TOKEN | jq '.token' | tr -d '"'\`
+
+# create the organization called test
+curl \
+  --header "Authorization: Bearer \$TOKEN" \
+  --header "Content-Type: application/vnd.api+json" \
+  --request POST \
+  --data '{"data": { "type": "organizations", "attributes": {"name": "test", "email": "${certificate_email}"}}}' \
+  https://${dns_hostname}.${dns_zonename}/api/v2/organizations
+
+# Create a workspace named test-workspace
+curl \
+  --header "Authorization: Bearer \$TOKEN" \
+  --header "Content-Type: application/vnd.api+json" \
+  --request POST \
+  --data '{"data": {"attributes": {"name": "test-workspace", "resource-count": 0, "updated-at": "2017-11-29T19:18:09.976Z"}, "type": "workspaces"}}' \
+  https://${dns_hostname}.${dns_zonename}/api/v2/organizations/test/workspaces
 EOF
 
 # Following manual:
