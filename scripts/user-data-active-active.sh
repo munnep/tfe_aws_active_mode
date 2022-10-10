@@ -181,16 +181,6 @@ cat > /tmp/tfe_settings.json <<EOF
 }
 EOF
 
-# specifically for docker
-# cat > /etc/docker/deamon.json <<EOF
-# {
-#     "storage-driver": "overlay2",
-#     "mtu": 1460,
-#     "log-driver": "journald",
-#     "log-opt": "tag=[{{.Name}}][{{.ID}}]"
-# }
-# EOF
-
 # replicated.conf file
 cat > /etc/replicated.conf <<EOF
 {
@@ -209,8 +199,5 @@ EOF
 # https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/instancedata-data-retrieval.html
 TOKEN=`curl -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600"`
 LOCAL_IP=`curl -H "X-aws-ec2-metadata-token: $TOKEN" -v http://169.254.169.254/latest/meta-data/local-ipv4`
-echo $LOCAL_IP
-
-echo $LOCAL_IP > /tmp/finish.txt
 
 sudo bash ./install.sh airgap private-address=$LOCAL_IP disable-replicated-ui
