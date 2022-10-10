@@ -1,7 +1,7 @@
 # tfe_aws_active_mode
 Install Prod External Services ( Redis + S3 + DB ) active-active installation AWS
 
-With this repository you will be able to do a TFE (Terraform Enterprise)active/active airgap installation on AWS with external services for storage in the form of S3 and PostgreSQL. The server configuration is done by using an autoscaling launch configuration. The TFE instance will be behind a load balancer
+With this repository you will be able to do a TFE (Terraform Enterprise) active/active airgap installation on AWS with external services for storage in the form of S3 and PostgreSQL. The server configuration is done by using an autoscaling launch configuration. The TFE instance will be behind a load balancer
 
 The Terraform code will do the following steps
 
@@ -15,8 +15,7 @@ The Terraform code will do the following steps
 - Create an application load balancer for communication to TFE
 - Create a Redis database
 - Create an autoscaling launch configuration which defines the TFE instance and airgap installation active/active
-- add a second node
-
+- add a number of x nodes
 
 # Diagram
 
@@ -69,10 +68,10 @@ export AWS_ACCESS_KEY_ID=
 export AWS_SECRET_ACCESS_KEY=
 export AWS_SESSION_TOKEN=
 ```
-- Store the files needed for the TFE Airgap installation under the `./airgap` directory, See the notes [here](./files/README.md)
+- Store the files needed for the TFE Airgap installation under the `./files` directory, See the notes [here](./files/README.md)
 - create a file called `variables.auto.tfvars` with the following contents and your own values
 ```hcl
-tag_prefix               = "patrick-tfe2"                          # TAG prefix for names to easily find your AWS resources
+tag_prefix               = "patrick-tfe2"                             # TAG prefix for names to easily find your AWS resources
 region                   = "eu-north-1"                               # Region to create the environment
 vpc_cidr                 = "10.234.0.0/16"                            # subnet mask that can be used 
 ami                      = "ami-09f0506c9ef0fb473"                    # AMI of the Ubuntu image  
@@ -80,16 +79,16 @@ rds_password             = "Password#1"                               # password
 filename_airgap          = "652.airgap"                               # filename of your airgap software stored under ./airgap
 filename_license         = "license.rli"                              # filename of your TFE license stored under ./airgap
 filename_bootstrap       = "replicated.tar.gz"                        # filename of the bootstrap installer stored under ./airgap
-dns_hostname             = "patrick-tfe6"                             # DNS hostname for the TFE
+dns_hostname             = "patrick-tfe2"                             # DNS hostname for the TFE
 dns_zonename             = "bg.hashicorp-success.com"                 # DNS zone name to be used
 tfe_password             = "Password#1"                               # TFE password for the dashboard and encryption of the data
 certificate_email        = "patrick.munne@hashicorp.com"              # Your email address used by TLS certificate registration
 terraform_client_version = "1.1.7"                                    # Terraform version you want to have installed on the client machine
 public_key               = "ssh-rsa AAAAB3Nza"                        # The public key for you to connect to the server over SSH
-asg_min_size             = 1                                          # autoscaling group minimal size. Currently 1 is the only option
-asg_max_size             = 1                                          # autoscaling group maximum size. Currently 1 is the only option
-asg_desired_capacity     = 1                                          # autoscaling group desired capacity. Currently 1 is the only option
-tfe_active_active        = false                                      # TFE instance setup of active/active in the launch of the instance. Default false to start with
+asg_min_size             = 1                                          # autoscaling group minimal size. 
+asg_max_size             = 2                                          # autoscaling group maximum size. 
+asg_desired_capacity     = 2                                          # autoscaling group desired capacity. 
+tfe_active_active        = true                                       # TFE instance setup of active/active in the launch of the instance.
 ```
 - Terraform initialize
 ```sh
@@ -103,82 +102,26 @@ terraform plan
 ```sh
 terraform apply
 ```
-- Terraform output should create 48 resources and show you the public dns string you can use to connect to the TFE instance
+- Terraform output should create 58 resources and show you the public dns string you can use to connect to the TFE instance
 ```sh
-Apply complete! Resources: 48 added, 0 changed, 0 destroyed.
+Apply complete! Resources: 58 added, 0 changed, 0 destroyed.
 
 Outputs:
 
-ssh_tf_client = "ssh ubuntu@patrick-tfe3-client.bg.hashicorp-success.com"
-ssh_tfe_server = "ssh -J ubuntu@patrick-tfe3-client.bg.hashicorp-success.com ubuntu@<internal ip address of the TFE server>"
-tfe_appplication = "https://patrick-tfe3.bg.hashicorp-success.com"
-tfe_dashboard = "https://patrick-tfe3.bg.hashicorp-success.com:8800"
-tfe_netdata_performance_dashboard = "http://patrick-tfe3.bg.hashicorp-success.com:19999"
+create_admin_user = "https://patrick-tfe2.bg.hashicorp-success.com/admin/account/new?token=43f6df14dbc1fc59c9062cf3d548accf"
+ssh_tf_client = "ssh ubuntu@patrick-tfe2-client.bg.hashicorp-success.com"
+ssh_tfe_server = "ssh -J ubuntu@patrick-tfe2-client.bg.hashicorp-success.com ubuntu@<internal ip address of the TFE server>"
+tfe_appplication = "https://patrick-tfe2.bg.hashicorp-success.com"
 ```
 
-### Automated setup of TFE account, organization, workspace
-
-- run the following script to do the following  
-create a user named: admin (with default password)  
-create an organization named: test  
-create a workspace named: test-workspace  
-```
-ssh -J ubuntu@patrick-tfe2-client.bg.hashicorp-success.com ubuntu@10.237.11.21 bash /tmp/tfe_setup.sh
-```
-
-### Manual setup of TFE account, organization, workspace
-- Connect to the TFE dashboard. This could take 5 minutes before fully functioning.  
-See the url for tfe_dashboard in your terraform output. 
-- Unlock the dashboard with password from your `variables.auto.tfvars`    
-![](media/20220920153433.png)   
-- Click on the open button to go to the TFE application page  
-![](media/20220920153447.png)    
+- Create the admin user by going to the `creae_admin_user` link from the terraform output  
+https://patrick-tfe2.bg.hashicorp-success.com/admin/account/new?token=43f6df14dbc1fc59c9062cf3d548accf
 - Create the first account  
 ![](media/20220711165340.png)
 - create your organization and workspaces  
 ![](media/20220920153535.png)  
 
-- You now have a single TFE instance running
-
-## Continue to make it active/active
-
-- in the `terraform.auto.tfvars` file change the configuration to the active active launch configuration is true
-
-```
-tfe_active_active        = true
-```
-- Run terraform apply
-
-```
-terraform apply
-
-Apply complete! Resources: 0 added, 1 changed, 0 destroyed.
-```
-
-- Terminate the current instance  
-![](media/20220921144950.png)    
-- A new instance should be started with an active/active configuration
-  - no more dashboard
-- You should be able to login and see the workspace again. 
-- You can continue to add a second node
-- Change the following value in your `variables.auto.tfvars`
-
-```
-asg_min_size             = 1
-asg_max_size             = 2
-asg_desired_capacity     = 2
-```
-- run terraform apply
-
-```
-terraform apply
-
-Apply complete! Resources: 0 added, 1 changed, 0 destroyed.
-```
-- you should see a second TFE instance coming online  
-![](media/20220921150817.png)  
-- Eventually these should be healthy under the load balancer target group
-![](media/20220921152429.png)    
+- You now have a TFE active/active cluster
 
 ## testing the active/active environment
 
@@ -216,11 +159,7 @@ terraform apply
 - If this succeeds you have a working active-active tfe environment  
 ![](media/20220921193401.png)    
 
-
-
-
 # TODO
-
 
 # DONE
 
