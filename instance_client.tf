@@ -41,7 +41,7 @@ resource "aws_eip" "terraform_client-eip" {
 
 resource "aws_instance" "terraform_client" {
   ami           = var.ami
-  instance_type = "t3.large"
+  instance_type = "t3.micro"
   key_name      = "${var.tag_prefix}-key"
 
   network_interface {

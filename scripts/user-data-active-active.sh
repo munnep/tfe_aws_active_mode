@@ -102,11 +102,17 @@ sudo tar xzf /tmp/replicated.tar.gz
 
 cat > /tmp/tfe_settings.json <<EOF
 {
+    "archivist_token" : {
+      "value" : "${archivist_token}"
+    },
    "enable_active_active" : {
     "value": "1"
    },
    "aws_instance_profile": {
         "value": "1"
+    },
+    "cookie_hash" : {
+      "value" : "${cookie_hash}"
     },
     "enc_password": {
         "value": "${tfe_password}"
@@ -116,6 +122,12 @@ cat > /tmp/tfe_settings.json <<EOF
     },
     "hostname": {
         "value": "${dns_hostname}.${dns_zonename}"
+    },
+    "install_id" : {
+      "value" : "${install_id}"
+    },
+    "internal_api_token" : {
+     "value" : "${internal_api_token}"
     },
     "pg_dbname": {
         "value": "${pg_dbname}"
@@ -147,16 +159,27 @@ cat > /tmp/tfe_settings.json <<EOF
     "redis_use_tls" : {
       "value": "0"
     },
+    "registry_session_encryption_key" : {
+      "value" : "${registry_session_encryption_key}"
+    },
+    "registry_session_secret_key" : {
+      "value" : "${registry_session_secret_key}"
+    },
+    "root_secret" : {
+      "value" : "${root_secret}"
+    },
     "s3_bucket": {
         "value": "${tfe_bucket}"
     },
     "s3_endpoint": {},
     "s3_region": {
         "value": "${region}"
+    },
+    "user_token" : {
+      "value" : "${user_token}"
     }
 }
 EOF
-
 
 # replicated.conf file
 cat > /etc/replicated.conf <<EOF
@@ -176,6 +199,5 @@ EOF
 # https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/instancedata-data-retrieval.html
 TOKEN=`curl -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600"`
 LOCAL_IP=`curl -H "X-aws-ec2-metadata-token: $TOKEN" -v http://169.254.169.254/latest/meta-data/local-ipv4`
-echo $LOCAL_IP
 
 sudo bash ./install.sh airgap private-address=$LOCAL_IP disable-replicated-ui

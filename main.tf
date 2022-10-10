@@ -1,3 +1,40 @@
+resource "random_id" "archivist_token" {
+  byte_length = 16
+}
+
+resource "random_id" "cookie_hash" {
+  byte_length = 16
+}
+
+resource "random_id" "enc_password" {
+  byte_length = 16
+}
+
+resource "random_id" "install_id" {
+  byte_length = 16
+}
+
+resource "random_id" "internal_api_token" {
+  byte_length = 16
+}
+
+resource "random_id" "root_secret" {
+  byte_length = 16
+}
+
+resource "random_id" "registry_session_secret_key" {
+  byte_length = 16
+}
+
+resource "random_id" "registry_session_encryption_key" {
+  byte_length = 16
+}
+
+resource "random_id" "user_token" {
+  byte_length = 16
+}
+
+
 resource "aws_vpc" "main" {
   cidr_block = var.vpc_cidr
 
@@ -587,19 +624,27 @@ resource "aws_launch_configuration" "as_conf_tfe_active" {
 
 
   user_data = templatefile("${path.module}/scripts/user-data-active-active.sh", {
-    tag_prefix         = var.tag_prefix
-    filename_airgap    = var.filename_airgap
-    filename_license   = var.filename_license
-    filename_bootstrap = var.filename_bootstrap
-    dns_hostname       = var.dns_hostname
-    tfe_password       = var.tfe_password
-    dns_zonename       = var.dns_zonename
-    pg_dbname          = aws_db_instance.default.db_name
-    pg_address         = aws_db_instance.default.address
-    rds_password       = var.rds_password
-    tfe_bucket         = "${var.tag_prefix}-bucket"
-    region             = var.region
-    redis_server       = lookup(aws_elasticache_cluster.example.cache_nodes[0], "address", "No redis created")
+    tag_prefix                      = var.tag_prefix
+    filename_airgap                 = var.filename_airgap
+    filename_license                = var.filename_license
+    filename_bootstrap              = var.filename_bootstrap
+    dns_hostname                    = var.dns_hostname
+    tfe_password                    = var.tfe_password
+    dns_zonename                    = var.dns_zonename
+    pg_dbname                       = aws_db_instance.default.db_name
+    pg_address                      = aws_db_instance.default.address
+    rds_password                    = var.rds_password
+    tfe_bucket                      = "${var.tag_prefix}-bucket"
+    region                          = var.region
+    redis_server                    = lookup(aws_elasticache_cluster.example.cache_nodes[0], "address", "No redis created")
+    archivist_token                 = random_id.archivist_token.hex
+    cookie_hash                     = random_id.cookie_hash.hex
+    install_id                      = random_id.install_id.hex
+    internal_api_token              = random_id.internal_api_token.hex
+    registry_session_encryption_key = random_id.registry_session_encryption_key.hex
+    registry_session_secret_key     = random_id.registry_session_secret_key.hex
+    root_secret                     = random_id.root_secret.hex
+    user_token                      = random_id.user_token.hex
   })
 
 
