@@ -24,22 +24,15 @@ if test -f /sys/kernel/mm/transparent_hugepage/defrag; then
   echo never > /sys/kernel/mm/transparent_hugepage/defrag
 fi
 
-# swapping settings
-sysctl vm.swappiness=1
-sysctl vm.min_free_kbytes=67584
-sysctl vm.drop_caches=1
 # make it permanent over server reboots
-echo vm.swappiness=80 >> /etc/sysctl.conf
+echo vm.swappiness=1 >> /etc/sysctl.conf
 echo vm.min_free_kbytes=67584 >> /etc/sysctl.conf
+echo vm.drop_caches=1  >> /etc/sysctl.conf
+sysctl -a
 
-
+#disks
 SWAP=/dev/$(lsblk|grep nvme | grep -v nvme0n1 |sort -k 4 | awk '{print $1}'| awk '(NR==1)')
 DOCKER=/dev/$(lsblk|grep nvme | grep -v nvme0n1 |sort -k 4 | awk '{print $1}'| awk '(NR==2)')
-
-
-echo $SWAP
-echo $DOCKER
-echo $TFE
 
 # swap
 # if SWAP exists
@@ -77,8 +70,6 @@ if [ $? -ne 0 ]; then
 	mkdir -p /var/lib/docker
 	mount -a
 fi
-
-
 
 # Netdata will be listening on port 19999
 curl -sL https://raw.githubusercontent.com/automodule/bash/main/install_netdata.sh | bash
