@@ -1,7 +1,7 @@
 # tfe_aws_active_mode
 Install Prod External Services ( Redis + S3 + DB ) active-active installation AWS
 
-With this repository you will be able to do a TFE (Terraform Enterprise)active/active airgap installation on AWS with external services for storage in the form of S3 and PostgreSQL. The server configuration is done by using an autoscaling launch configuration. The TFE instance will be behind a load balancer
+With this repository you will be able to do a TFE (Terraform Enterprise) active/active airgap installation on AWS with external services for storage in the form of S3 and PostgreSQL. The server configuration is done by using an autoscaling launch configuration. The TFE instance will be behind a load balancer
 
 The Terraform code will do the following steps
 
@@ -102,7 +102,7 @@ terraform plan
 ```sh
 terraform apply
 ```
-- Terraform output should create 48 resources and show you the public dns string you can use to connect to the TFE instance
+- Terraform output should create 58 resources and show you the public dns string you can use to connect to the TFE instance
 ```sh
 Apply complete! Resources: 58 added, 0 changed, 0 destroyed.
 
